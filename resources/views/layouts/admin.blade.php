@@ -12,7 +12,7 @@
         <ul>
             <li><a href="{{route('accueil')}}">Accueil</a></li>
             <li><a href="{{route('categories.index')}}">Gestion des categories</a></li>
-            <li><a href="#">Gestion des produits</a></li>
+            <li><a href="{{route('produits.index')}}">Gestion des produits</a></li>
         </ul>
     </nav>
     <div class="main">

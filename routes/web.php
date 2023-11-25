@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\CategorieController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\CategorieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('accueil');
 })->name('accueil');
+Route::get("categorie/search",[CategorieController::class,'search'])->name("categories.search");
+Route::get("produit/search",[ProduitController::class,'search'])->name("produits.search");
 Route::resource("categories",CategorieController::class);
+Route::resource("produits",ProduitController::class);

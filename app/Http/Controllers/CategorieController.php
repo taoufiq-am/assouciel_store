@@ -13,16 +13,16 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $categories=Categorie::all();
-       
-        return view("categories.index",compact('categories'));
+        $categories = Categorie::all();
+
+        return view("categories.index", compact('categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    { 
+    {
         return view('categories.create');
     }
 
@@ -36,10 +36,10 @@ class CategorieController extends Controller
         // $cat->description=$request->input('description');
         // $cat->save();
         $request->validate([
-            'designation'=>'required|unique:categories,designation',
-            'description'=>'required',
+            'designation' => 'required|unique:categories,designation',
+            'description' => 'required',
         ]);
-       Categorie::create($request->all()); 
+        Categorie::create($request->all());
         return  redirect()->route('categories.index');
     }
 
@@ -48,9 +48,12 @@ class CategorieController extends Controller
      */
     public function show(int $id)
     {
-        $cat=Categorie::find($id);
-        
-        return view('categories.show')->with("cat",$cat);
+        $cat = Categorie::find($id);
+        if ($cat == null) {
+            abort(404);
+        }
+
+        return view('categories.show')->with("cat", $cat);
     }
 
     /**
@@ -58,8 +61,11 @@ class CategorieController extends Controller
      */
     public function edit(string $id)
     {
-        $cat=Categorie::find($id);
-        return view('categories.edit',compact('cat'));
+        $cat = Categorie::find($id);
+        if ($cat == null) {
+            abort(404);
+        }
+        return view('categories.edit', compact('cat'));
     }
 
     /**
@@ -67,14 +73,13 @@ class CategorieController extends Controller
      */
     public function update(Request $request, string $id)
     {
-          $request->validate([
-            'designation'=>'required|unique:categories,designation',
-            'description'=>'required',
+        $request->validate([
+            'designation' => 'required|unique:categories,designation,' . $id,
+            'description' => 'required',
         ]);
-        $cat=Categorie::find($id);
+        $cat = Categorie::find($id);
         $cat->update($request->all());
         return redirect()->route('categories.index');
-        
     }
 
     /**
@@ -84,6 +89,17 @@ class CategorieController extends Controller
     {
         Categorie::destroy($id);
         return  redirect()->route('categories.index');
+    }
+    public function search(Request $request)
+    {
+        $param = $request->val_search;
+        if ($param == null) {
+            $categories = Categorie::all();
+            return redirect()->route("categories.index", compact("categories"));
 
+        } else {
+            $categories = Categorie::where('id', 'like', "%" . $param . "%")->orWhere('designation', 'like', "%" . $param . "%")->get();
+        }
+        return view("categories.index", compact("categories"));
     }
 }

@@ -3,10 +3,15 @@
  @section('content')
      
     <h1>Liste des categories</h1>
+    <form  action="{{route("categories.search")}}" method="get">
+      <label for="chercher">chercher</label>
+      <input type="text" id="chercher" name="val_search">
+      <input type="submit" value="Chercher">
+    </form>
     <a href="{{route('categories.create')}}">Ajouter une nouvelle categorie</a>
     <table id="tbl">
       <tr>
-          <th>Id</th>
+        <th>Id</th>
         <th>Designation</th>
         <th>Description</th>
         <th colspan="3">Actions</th>
