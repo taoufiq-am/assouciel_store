@@ -17,7 +17,20 @@ class HomeController extends Controller
     /* add prouduct to cart  */
     function add(Request $request)
     {
-        session()->push("produits", ["id" => $request->id, "quantite" => ($request->quantite|1) ]);
+        $sessionProduits = session()->get("produits", []);
+        $productExists = false;
+        foreach ($sessionProduits as $key => $product) {
+            if ($product["id"] == $request->id) {
+                $sessionProduits[$key]["quantite"] += $request->quantite;
+                $productExists = true;
+                break;
+            }
+        }
+        if (!$productExists) {
+            $sessionProduits[] = ["id" => $request->id, "quantite" => $request->quantite];
+        }
+        session()->put("produits", $sessionProduits);
+
         return redirect()->route("home.index");
     }
     function show()
@@ -35,17 +48,15 @@ class HomeController extends Controller
         return view("home.show", compact("cartItems"));
     }
 
-    function destroy($id){
+    function destroy($id)
+    {
         $sessionProduits = session()->get("produits");
-        foreach($sessionProduits as $key=>$value ){
-            if($value["id"] == $id){
+        foreach ($sessionProduits as $key => $value) {
+            if ($value["id"] == $id) {
                 unset($sessionProduits[$key]);
             }
-
         }
         session()->put("produits", $sessionProduits);
         return redirect()->back();
-
-
     }
 }
