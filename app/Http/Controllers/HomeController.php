@@ -19,6 +19,7 @@ class HomeController extends Controller
     {
         $sessionProduits = session()->get("produits", []);
         $productExists = false;
+        $sum = 1;
         foreach ($sessionProduits as $key => $product) {
             if ($product["id"] == $request->id) {
                 $sessionProduits[$key]["quantite"] += $request->quantite;
@@ -27,7 +28,8 @@ class HomeController extends Controller
             }
         }
         if (!$productExists) {
-            $sessionProduits[] = ["id" => $request->id, "quantite" => $request->quantite];
+            $produits = Produit::find($request->id);
+            $sessionProduits[] = ["id" => $produits->id, "quantite" => $request->quantite];
         }
         session()->put("produits", $sessionProduits);
 
@@ -37,15 +39,16 @@ class HomeController extends Controller
     {
         $sessionProduits = session()->get("produits");
         $cartItems = [];
+        $sum=0;
         foreach ($sessionProduits as $produit) {
             $item = [
                 "produit" => Produit::find($produit["id"]),
                 "quantite" => $produit["quantite"]
             ];
+            $sum += $item["quantite"] * $item["produit"]->prix_u;
             array_push($cartItems, $item);
         }
-        // dd($cartItems);
-        return view("home.show", compact("cartItems"));
+        return view("home.show", compact("cartItems","sum"));
     }
 
     function destroy($id)

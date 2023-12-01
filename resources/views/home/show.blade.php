@@ -11,6 +11,7 @@
                 <th scope="col">designation</th>
                 <th scope="col">Quantite demander</th>
                 <th scope="col">Prix</th>
+                <th scope="col">Prix x Quantite demander</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -22,7 +23,8 @@
                             alt="{{ $item['produit']->designation }}"></td>
                     <td>{{ $item['produit']->designation }}</td>
                     <td>{{ $item['quantite'] }}</td>
-                    <td>{{ $item['produit']->prix_u }}</td>
+                    <td>{{ $item['produit']->prix_u }} MAD</td>
+                    <td>{{ $item['produit']->prix_u * $item['quantite'] }} MAD</td>
                     <td>
                         <form action="{{ route('home.destroy', ['id' => $item['produit']->id]) }}" method="get">
                             @method('delete')
@@ -33,6 +35,10 @@
                     </td>
                 </tr>
             @endforeach
+            <tr>
+                <th colspan="5" class="bg-success">total </th>
+                <td>{{$sum}} MAD</td>
+            </tr>
         </tbody>
     </table>
 
