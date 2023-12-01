@@ -2,7 +2,6 @@
 @section('title', 'Home')
 @section('content')
     <h1>Products</h1>
-    <a href={{route("home.show")}}>Show Cart</a>
     <div class="container">
         <div class="row justify-content-evenly">
             @foreach ($produits as $produit)

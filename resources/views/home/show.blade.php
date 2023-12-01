@@ -23,7 +23,14 @@
                     <td>{{ $item['produit']->designation }}</td>
                     <td>{{ $item['quantite'] }}</td>
                     <td>{{ $item['produit']->prix_u }}</td>
-                    <td><a href="{{route("home.destroy",["id"=>$item['produit']->id])}}">remove</a></td>
+                    <td>
+                        <form action="{{ route('home.destroy', ['id' => $item['produit']->id]) }}" method="get">
+                            @method('delete')
+                            @csrf
+                            <input type="submit" value="remove"
+                                onclick="return confirm('are you sure about deleting this product')">
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
