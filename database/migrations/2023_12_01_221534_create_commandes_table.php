@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("ligne_commande_id")->constrained()->onDelete("cascade");
+            $table->foreignId("id_client")->constrained()->onDelete("cascade");
+            $table->foreignId("id_etat")->constrained()->onDelete("cascade");
             $table->timestamps();
+
         });
     }
 

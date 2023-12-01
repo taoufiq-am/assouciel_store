@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\LigneCommande;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,5 +14,7 @@ class LigneCommandeSeeder extends Seeder
     public function run(): void
     {
         //
+        LigneCommande::factory(10)->create();
+
     }
 }

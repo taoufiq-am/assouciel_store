@@ -17,6 +17,8 @@ class EtateFactory extends Factory
     public function definition(): array
     {
         return [
+            "intitule" => "En attente de confirmation",
+            "description" => $this->faker->sentence
             //
         ];
     }

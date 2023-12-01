@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Client;
+use Carbon\Factory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +14,6 @@ class ClientSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Client::factory(10)->create();
     }
 }

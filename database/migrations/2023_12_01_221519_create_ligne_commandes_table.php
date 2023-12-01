@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('ligne_commandes', function (Blueprint $table) {
             $table->id();
+            $table->integer("qte");
+            $table->foreignId("id_prouduit")->constrained()->onDelete("cascade");
+            $table->foreignId("id_commande")->constrained()->onDelete("cascade");
             $table->timestamps();
         });
     }

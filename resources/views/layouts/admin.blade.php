@@ -20,7 +20,9 @@
             <li><a href="{{ route('home.index') }}">Accueil</a></li>
             <li><a href="{{ route('categories.index') }}">Gestion des categories</a></li>
             <li><a href="{{ route('produits.index') }}">Gestion des produits</a></li>
+            <li><a href="#">Gestion des commande</a></li>
             <li><a href="{{route("home.show")}}">View cart</a></li>
+            <li><a href="#">mes commande</a></li>
         </ul>
     </nav>
     <div class="main">
