@@ -13,7 +13,8 @@ class Produit extends Model
         'designation',
         'prix_u',
         'quantite_stock',
-        'categorie_id'
+        'categorie_id',
+        'image'
     ];
     public function categorie(){
        return  $this->belongsTo(Categorie::class);

@@ -2,7 +2,7 @@
 @section('title', 'cree un produit')
 @section('content')
     <h1>Ajouter un produit</h1>
-    <form action="{{ route('produits.store') }}" method="post">
+    <form action="{{ route('produits.store') }}" method="post"  enctype="multipart/form-data">
         @csrf
         <div>
             <label for="designation">Designation</label>
@@ -28,9 +28,13 @@
             </select>
         </div>
         <div>
+            <input type="file" name="image" id="image" accept="image/*">
+        </div>
+        <div>
             <input type="submit" value="Ajouter">
             <input type="reset" value="Vider">
         </div>
+        
     </form>
     @if($errors->any())
     <ul>

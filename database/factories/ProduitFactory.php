@@ -17,11 +17,20 @@ class ProduitFactory extends Factory
      */
     public function definition(): array
     {
-        return [ 
-        'designation'=>$this->faker->sentence,
-        'prix_u'=>$this->faker->randomFloat(2,1,500),
-        'quantite_stock'=>$this->faker->numberBetween(0,1200),
-        'categorie_id'=>Categorie::all()->random()->id
+        return [
+            'designation' => $this->faker->sentence,
+            'prix_u' => $this->faker->randomFloat(2, 1, 500),
+            'quantite_stock' => $this->faker->numberBetween(0, 1200),
+            'categorie_id' => Categorie::all()->random()->id,
+            "image" => $this->faker->randomElement([
+                "storage\products\images\hodie1.jpg",
+                "storage\products\images\hodie2.jpg",
+                "storage\products\images\hodie3.jpg",
+                "storage\products\images\hodie4.jpg",
+                "storage\products\images\hodie5.jpg",
+                "storage\products\images\hodie6.jpg",
+            ])
+
             //
         ];
     }

@@ -8,5 +8,7 @@
        <p><strong>Prix unitaire:</strong> {{$produit->prix_u}}</p>
        <p><strong>Quantite on stock:</strong> {{$produit->quantite_stock}}</p>
        <p><strong>N° Categorie:</strong> {{$produit->categorie_id}}</p>
+       <p>image</p>
+       <img src="{{asset('storage/'. $produit->image)}}" alt="{{$produit->designation}}">
    </div>
 @endsection

@@ -92,14 +92,30 @@ class CategorieController extends Controller
     }
     public function search(Request $request)
     {
-        $param = $request->val_search;
-        if ($param == null) {
-            $categories = Categorie::all();
-            return redirect()->route("categories.index", compact("categories"));
+        $designation = $request->query("designation");
+        $description = $request->query("description");
+        $notFound="";
 
-        } else {
-            $categories = Categorie::where('id', 'like', "%" . $param . "%")->orWhere('designation', 'like', "%" . $param . "%")->get();
+        $categoriesBuilder = Categorie::query();
+
+        if ($designation) {
+            $categoriesBuilder->where('designation', 'like', "%" . $designation . "%");
         }
-        return view("categories.index", compact("categories"));
+
+        if ($description) {
+            $categoriesBuilder->where('description', 'like', "%" . $description . "%");
+        }
+        
+        if($categoriesBuilder->count() == 0){
+            $notFound="Aucun catégorie trouver";
+            $categoriesBuilder = Categorie::query();
+        }
+
+        $params = [
+            "designation" => $designation,
+            "description" => $description,
+        ];
+        $categories = $categoriesBuilder->paginate(5)->appends( $params );
+        return view("categories.index", compact("categories","notFound"));
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categorie;
 use App\Models\Produit;
+use App\Models\Categorie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProduitController extends Controller
 {
@@ -13,25 +14,53 @@ class ProduitController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->all() == []){
-            $produits = Produit::all();
-            return view("produits.index",compact("produits"));
-        }else{
-            $param = $request->val_search;
-            if($param == null){
-                $produits = Produit::all();
-                return redirect()->route("produits.index", compact("produits"));
-            }else{
-                $produits = Produit::where('id', 'like', "%" . $param . "%")->orWhere('designation', 'like', "%" . $param . "%")->get();
-                return view("produits.index",compact("produits"));
-            }
+        $produitsBuilder = Produit::query();
+
+        $designation = $request->query("filter_designation");
+        $categorie = $request->query("filter_categorie");
+        $prix_u_min = $request->query("prix_u_min");
+        $prix_u_max = $request->query("prix_u_max");
+        $quantite = $request->query("filter_quantite_stock");
+
+        if ($designation != null) {
+            $produitsBuilder->where('designation', 'like', '%' . $designation . '%');
         }
-       
+        if ($categorie != null) {
+            $produitsBuilder->where('categorie_id', $categorie);
+        }
+        if ($prix_u_min != null) {
+            $produitsBuilder->where('prix_u', '>=', $prix_u_min);
+        }
+
+        if ($prix_u_max != null) {
+            $produitsBuilder->where('prix_u', '<=', $prix_u_max);
+        }
+
+        if ($quantite != null) {
+            $produitsBuilder->where('quantite_stock', '=', $quantite);
+        }
+        $param = [
+            "filter_designation" => $designation,
+            "filter_categorie" => $categorie,
+            "prix_u_min" => $prix_u_min,
+            "prix_u_max" => $prix_u_max,
+            "filter_quantite_stock" => $quantite
+        ];
+        if(!$produitsBuilder){}
+        $produits = $produitsBuilder->paginate(5)->appends($param);
+
+        $categories = Categorie::all();
+        return view("produits.index", [
+            'produits' => $produits,
+            "categories" => $categories
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
+
     public function create()
     {
         $categories = Categorie::all();
@@ -43,13 +72,19 @@ class ProduitController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validateData=$request->validate([
             "designation" => "required|unique:produits,designation",
             "prix_u" => "required",
             "quantite_stock" => "required",
-            "categorie_id" => "required"
+            "categorie_id" => "required",
+            "image"=>"image|mimes:jpeg,png,jpeg,gif,svg|max:2048"
         ]);
-        Produit::create($request->all());
+       
+        if($request->hasFile("image")){
+            $imagePath=$request->file("image")->store("products/images","public");
+            $validateData["image"]= $imagePath;
+        }
+        Produit::create($validateData);
         return redirect()->route("produits.index");
     }
 
@@ -86,7 +121,9 @@ class ProduitController extends Controller
             "designation" => "required|unique:prouduits,designation," . $id,
             "prix_u" => "required",
             "quantite_stock" => "required",
-            "categorie_id" => "required"
+            "categorie_id" => "required",
+            "image"=>"image|mimes:jpeg|png|jpeg|gif|svg|max:2048"
+
         ]);
         $produit = Produit::find($id);
         $produit->update($request->all());
