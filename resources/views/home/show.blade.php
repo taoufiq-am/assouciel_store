@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'show cart')
 @section('content')
+@if ($cartItems)
+   <a href="{{route("home.clear")}}">Clear carts</a>
     <table class="table center  align-middle text-center caption-top">
         <caption>Cart Products</caption>
 
@@ -41,7 +43,13 @@
             </tr>
         </tbody>
     </table>
-
+    <form action="{{route("homme.storeInfo")}}">
+        <input type="submit" value="Buy Now">
+    </form>
+@else
+<h1>No itemes in the cart </h1>
+<a href="{{route("home.index")}}">Add Items Now</a>
+@endif
 
 
 @endsection

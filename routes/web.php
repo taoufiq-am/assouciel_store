@@ -20,6 +20,8 @@ Route::get('/',[HomeController::class,'index'])->name('home.index');
 Route::get('/add/{id}',[HomeController::class,'add'])->name('home.add');
 Route::get('/show',[HomeController::class,'show'])->name('home.show');
 Route::get('/destroy/{id}',[HomeController::class,"destroy"])->name('home.destroy'); 
+Route::get('/clear}',[HomeController::class,"clear"])->name('home.clear'); 
+Route::get('/clientInfo}',[HomeController::class,"storeInfo"])->name('home.storeInfo'); 
 Route::get("categorie/search",[CategorieController::class,'search'])->name("categories.search");
 Route::get("produit/search",[ProduitController::class,'search'])->name("produits.search");
 Route::resource("categories",CategorieController::class);

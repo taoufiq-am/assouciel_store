@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     //
-    function index()
+   public function index()
     {
         $produits = Produit::all();
         return view("home.index", compact("produits"));
     }
 
     /* add prouduct to cart  */
-    function add(Request $request)
+    public function add(Request $request)
     {
         $sessionProduits = session()->get("produits", []);
         $productExists = false;
@@ -35,9 +35,9 @@ class HomeController extends Controller
 
         return redirect()->route("home.index");
     }
-    function show()
+    public function show()
     {
-        $sessionProduits = session()->get("produits");
+        $sessionProduits = session()->get("produits",[]);
         $cartItems = [];
         $sum=0;
         foreach ($sessionProduits as $produit) {
@@ -51,7 +51,7 @@ class HomeController extends Controller
         return view("home.show", compact("cartItems","sum"));
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
         $sessionProduits = session()->get("produits");
         foreach ($sessionProduits as $key => $value) {
@@ -61,5 +61,14 @@ class HomeController extends Controller
         }
         session()->put("produits", $sessionProduits);
         return redirect()->back();
+    }
+
+    public function clear(){
+        session()->forget("produits");
+
+        return redirect()->route('home.index');
+    }
+    public function storeInfo(){
+        return view('home.buy');
     }
 }
