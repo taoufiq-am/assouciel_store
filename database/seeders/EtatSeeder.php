@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Etate;
+use App\Models\Etat;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class EtateSeeder extends Seeder
+class EtatSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,7 +14,7 @@ class EtateSeeder extends Seeder
     public function run(): void
     {
         //
-        Etate::factory(10)->create();
+        Etat::factory(10)->create();
 
     }
 }

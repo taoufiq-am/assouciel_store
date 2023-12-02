@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Commande;
 use App\Models\Produit;
+use App\Models\LigneCommande;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +21,8 @@ class LigneCommandeFactory extends Factory
     public function definition(): array
     {
         return [
-            "id_prouduit"=>Produit::all()->random()->id,
-            "id_commande"=>Commande::all()->random()->id
+            "prouduit_id"=>Produit::all()->random()->id,
+            "commande_id"=>Commande::all()->random()->id
             //
         ];
     }

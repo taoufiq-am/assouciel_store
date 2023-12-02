@@ -3,8 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Client;
-use App\Models\Etate;
-use App\Models\LigneCommande;
+use App\Models\Etat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,9 +19,8 @@ class CommandeFactory extends Factory
     public function definition(): array
     {
         return [
-            "ligne_commande_id"=>LigneCommande::all()->random()->id,
-            "id_client"=>Client::all()->random()->id,
-            "id_etat"=>Etate::all()->random()->id,
+            "client_id"=>Client::all()->random()->id,
+            "etat_id"=>Etat::all()->random()->id,
             //
         ];
     }

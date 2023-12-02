@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use App\Http\Controllers\CommandeController;
 
 class HomeController extends Controller
 {
     //
-   public function index()
+    public function index()
     {
         $produits = Produit::all();
         return view("home.index", compact("produits"));
@@ -37,9 +40,9 @@ class HomeController extends Controller
     }
     public function show()
     {
-        $sessionProduits = session()->get("produits",[]);
+        $sessionProduits = session()->get("produits", []);
         $cartItems = [];
-        $sum=0;
+        $sum = 0;
         foreach ($sessionProduits as $produit) {
             $item = [
                 "produit" => Produit::find($produit["id"]),
@@ -48,7 +51,7 @@ class HomeController extends Controller
             $sum += $item["quantite"] * $item["produit"]->prix_u;
             array_push($cartItems, $item);
         }
-        return view("home.show", compact("cartItems","sum"));
+        return view("home.show", compact("cartItems", "sum"));
     }
 
     public function destroy($id)
@@ -63,12 +66,38 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    public function clear(){
+    public function clear()
+    {
         session()->forget("produits");
 
         return redirect()->route('home.index');
     }
-    public function storeInfo(){
-        return view('home.buy');
+    public function clientInfo()
+    {
+        return view('home.clientInfo');
+    }
+    public function storeInfo(Request $request)
+    {
+       $request->validate(
+            [
+                "nom" => "required",
+                "prenom" => "required",
+                "ville" => "required",
+                "tele" => "required",
+                "adresse" => "required"
+            ]
+        );
+        $client = Client::create(
+            [
+                "nom" => $request->input("nom"),
+                "prenom" => $request->input("prenom"),
+                "ville" => $request->input("ville"),
+                "tele" => $request->input("tele"),
+                "adresse" => $request->input("adresse")
+            ]
+        );
+        $commande=new CommandeController();
+        $commande->store($client->id);
+
     }
 }

@@ -43,7 +43,7 @@
             </tr>
         </tbody>
     </table>
-    <form action="{{route("homme.storeInfo")}}">
+    <form action="{{route("home.clientInfo")}}">
         <input type="submit" value="Buy Now">
     </form>
 @else

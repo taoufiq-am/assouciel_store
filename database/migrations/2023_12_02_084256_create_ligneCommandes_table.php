@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ligne_commandes', function (Blueprint $table) {
+        Schema::create('ligneCommandes', function (Blueprint $table) {
             $table->id();
             $table->integer("qte");
-            $table->foreignId("id_prouduit")->constrained()->onDelete("cascade");
-            $table->foreignId("id_commande")->constrained()->onDelete("cascade");
+            $table->foreignId("produit_id")->constrained()->onDelete("cascade");
+            $table->foreignId("commande_id")->constrained()->onDelete("cascade");
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ligne_commandes');
+        Schema::dropIfExists('ligneCommandes');
     }
 };

@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategorieSeeder:: class,
             ProduitSeeder::class,
-            EtateSeeder::class,
-            LigneCommandeSeeder::class,
+            EtatSeeder::class,
             ClientSeeder::class,
-            CommandeSeeder::class
+            CommandeSeeder::class,
+            LigneCommandeSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commande;
 use Illuminate\Http\Request;
 
 class CommandeController extends Controller
@@ -25,9 +26,15 @@ class CommandeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($clientId)
     {
-        //
+        Commande::create(
+            [
+                "client_id" => $clientId,
+                "etet_id"=>"En attente de confirmation"
+            ]
+            
+            );
     }
 
     /**
