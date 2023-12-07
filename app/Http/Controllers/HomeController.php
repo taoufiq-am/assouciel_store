@@ -61,7 +61,7 @@ class HomeController extends Controller
         }
         return view("home.show", compact("cartItems", "sum"));
     }
-
+// remove a product from cart
     public function destroy($id)
     {
         $sessionProduits = session()->get("produits");
@@ -73,6 +73,7 @@ class HomeController extends Controller
         session()->put("produits", $sessionProduits);
         return redirect()->back();
     }
+// remove all cart products
 
     public function clear()
     {
@@ -81,47 +82,5 @@ class HomeController extends Controller
         return redirect()->route('home.index');
     }
 
-
-    public function reSum(Request $request)
-    {
-        $qte = $request->quantite;
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public function clientInfo()
-    {
-        return view('home.clientInfo');
-    }
-    public function storeInfo(Request $request)
-    {
-        $request->validate(
-            [
-                "nom" => "required",
-                "prenom" => "required",
-                "ville" => "required",
-                "tele" => "required",
-                "adresse" => "required"
-            ]
-        );
-        $client = Client::create(
-            [
-                "nom" => $request->input("nom"),
-                "prenom" => $request->input("prenom"),
-                "ville" => $request->input("ville"),
-                "tele" => $request->input("tele"),
-                "adresse" => $request->input("adresse")
-            ]
-        );
-        $commande = new CommandeController();
-        $commande->store($client->id);
-    }
+   
 }

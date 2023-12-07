@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\CommandeController;
 
 class ClientController extends Controller
 {
@@ -19,7 +22,8 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view("clients.create");
+        
     }
 
     /**
@@ -27,7 +31,19 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData=$request->validate(
+            [
+                "nom" => "required",
+                "prenom" => "required",
+                "ville" => "required",
+                "tele" => "required",
+                "adresse" => "required"
+            ]
+        );
+        $client = Client::create($validateData);
+        // $commande = new CommandeController();
+        // $commande->store($client->id);
+    
     }
 
     /**

@@ -54,7 +54,7 @@
                 </tr>
             </tbody>
         </table>
-        <form action="{{ route('home.clientInfo') }}">
+        <form action="{{ route('clients.create') }}">
             <input type="submit" value="Buy Now">
         </form>
     @else
