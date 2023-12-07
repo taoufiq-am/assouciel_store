@@ -44,3 +44,18 @@ if (submitFilter && formInputs) {
     });
 }
 
+// show the product image while create or update the product
+
+function showImage(input) {
+    let productImg = document.getElementById("productImg");
+    if (input.files) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            productImg.src = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        productImg.src = "";
+    }
+}

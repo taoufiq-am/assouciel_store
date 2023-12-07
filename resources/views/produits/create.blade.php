@@ -28,7 +28,8 @@
             </select>
         </div>
         <div>
-            <input type="file" name="image" id="image" accept="image/*">
+            <input type="file" name="image" id="image" accept="image/*" onchange="showImage(this)">
+            <img src="" alt="" id="productImg">
         </div>
         <div>
             <input type="submit" value="Ajouter">

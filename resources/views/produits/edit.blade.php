@@ -22,8 +22,8 @@
         </div>
         <div>
             <label for="image">Image</label>
-            <input type="file" name="image" id="image" value="{{ asset($produit->image) }}" accept="image/*" onchange="showImage">
-            <img src="{{ asset("storage/".$produit->image) }}" alt="{{$produit->designation}}">
+            <input type="file" name="image" id="image" value="{{ asset($produit->image) }}" accept="image/*" onchange="showImage(this)">
+            <img src="{{ asset("storage/".$produit->image) }}" alt="{{$produit->designation}}" id="productImg">
         </div>
         <div>
             <label for="categorie_id">N° Categorie</label>
