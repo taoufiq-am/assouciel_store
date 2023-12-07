@@ -6,18 +6,24 @@
      <form action="{{ route('categories.search') }}" method="get">
          <div>
              <label for="designation">Designation : </label>
-             <input type="text" id="designation" name="designation" placeholder="Filtrer par designation" value="{{old("designation")}}">
+             <input type="text" id="designation" name="designation" placeholder="Filtrer par designation"
+                 value="{{ $params['designation'] }}">
          </div>
          <div>
              <label for="description">Description : </label>
-             <input type="text" id="description" name="description" placeholder="Filtrer par description" value="{{old("description")}}">
+             <input type="text" id="description" name="description" placeholder="Filtrer par description"
+                 value="{{ $params['description'] }}">
          </div>
          <div>
-             <input type="submit" value="Appliquer">
+             <input type="submit" value="Appliquer" id="submitFilter" disabled>
          </div>
      </form>
      <a href="{{ route('categories.create') }}">Ajouter une nouvelle categorie</a>
-     <h3>{{$notFound}}</h3>
+     <a href="{{ route('categories.clear') }}">Supprimer tous les categories</a>
+     @if (isset($notFound))
+         <h3>{{ $notFound }} <a href="{{ route('categories.index') }}">retournez a la liste principale</a></h3>
+     @endif
+
      <table id="tbl">
          <tr>
              <th>Id</th>
@@ -44,6 +50,6 @@
          @endforeach
      </table>
      <div>
-     {{$categories->links()}}
-    </div>
+         {{ $categories->links() }}
+     </div>
  @endsection

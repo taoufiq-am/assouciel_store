@@ -22,10 +22,13 @@ class HomeController extends Controller
     {
         $sessionProduits = session()->get("produits", []);
         $productExists = false;
-        $sum = 1;
         foreach ($sessionProduits as $key => $product) {
             if ($product["id"] == $request->id) {
-                $sessionProduits[$key]["quantite"] += $request->quantite;
+                if ($request->recalcule) {
+                    $sessionProduits[$key]["quantite"] = $request->quantite;
+                } else {
+                    $sessionProduits[$key]["quantite"] += $request->quantite;
+                }
                 $productExists = true;
                 break;
             }
@@ -35,9 +38,14 @@ class HomeController extends Controller
             $sessionProduits[] = ["id" => $produits->id, "quantite" => $request->quantite];
         }
         session()->put("produits", $sessionProduits);
-
-        return redirect()->route("home.index");
+        if ($request->recalcule) {
+            return redirect()->route("home.show");
+        } else {
+            return redirect()->route("home.index");
+        }
     }
+
+    // show cart 
     public function show()
     {
         $sessionProduits = session()->get("produits", []);
@@ -49,7 +57,7 @@ class HomeController extends Controller
                 "quantite" => $produit["quantite"]
             ];
             $sum += $item["quantite"] * $item["produit"]->prix_u;
-            array_push($cartItems, $item);
+            $cartItems[] = $item;
         }
         return view("home.show", compact("cartItems", "sum"));
     }
@@ -72,13 +80,30 @@ class HomeController extends Controller
 
         return redirect()->route('home.index');
     }
+
+
+    public function reSum(Request $request)
+    {
+        $qte = $request->quantite;
+    }
+
+
+
+
+
+
+
+
+
+
+
     public function clientInfo()
     {
         return view('home.clientInfo');
     }
     public function storeInfo(Request $request)
     {
-       $request->validate(
+        $request->validate(
             [
                 "nom" => "required",
                 "prenom" => "required",
@@ -96,8 +121,7 @@ class HomeController extends Controller
                 "adresse" => $request->input("adresse")
             ]
         );
-        $commande=new CommandeController();
+        $commande = new CommandeController();
         $commande->store($client->id);
-
     }
 }

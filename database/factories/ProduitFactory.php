@@ -23,12 +23,12 @@ class ProduitFactory extends Factory
             'quantite_stock' => $this->faker->numberBetween(0, 1200),
             'categorie_id' => Categorie::all()->random()->id,
             "image" => $this->faker->randomElement([
-                "storage\products\images\hodie1.jpg",
-                "storage\products\images\hodie2.jpg",
-                "storage\products\images\hodie3.jpg",
-                "storage\products\images\hodie4.jpg",
-                "storage\products\images\hodie5.jpg",
-                "storage\products\images\hodie6.jpg",
+                "products\images\hodie1.jpg",
+                "products\images\hodie2.jpg",
+                "products\images\hodie3.jpg",
+                "products\images\hodie4.jpg",
+                "products\images\hodie5.jpg",
+                "products\images\hodie6.jpg",
             ])
 
             //

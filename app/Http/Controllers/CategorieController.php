@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class CategorieController extends Controller
@@ -13,9 +14,14 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $categories = Categorie::all();
+        $categoriesBuilder = Categorie::query();
+        $categories=$categoriesBuilder->paginate(5);
+        $params = [
+            "designation" => "",
+            "description" => "",
+        ];
 
-        return view("categories.index", compact('categories'));
+        return view("categories.index", compact('categories','params'));
     }
 
     /**
@@ -108,7 +114,6 @@ class CategorieController extends Controller
         
         if($categoriesBuilder->count() == 0){
             $notFound="Aucun catégorie trouver";
-            $categoriesBuilder = Categorie::query();
         }
 
         $params = [
@@ -116,6 +121,11 @@ class CategorieController extends Controller
             "description" => $description,
         ];
         $categories = $categoriesBuilder->paginate(5)->appends( $params );
-        return view("categories.index", compact("categories","notFound"));
+        return view("categories.index", compact("categories","notFound","params"));
+    }
+
+    public function clear(){
+        DB::table('categories')->delete();
+        return redirect()->route("categories.index");
     }
 }

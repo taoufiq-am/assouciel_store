@@ -2,25 +2,26 @@
 @section('title', 'Gestion des produits')
 @section('content')
     <h1>Liste des Produits</h1>
-    <form action="{{ route('produits.index') }}" method="get" >
+    <form action="{{ route('produits.index') }}" method="get">
         <div>
             <label for="filter_designation">Designation : </label>
             <input type="text" id="filter_designation" name="filter_designation" placeholder="Filtre par Designation"
-                value="{{ isset($param) ? $param : '' }}">
+                value="{{ $params['filter_designation'] }}">
         </div>
         <div>
             <label for="filter_categorie">Categorie : </label>
             <select name="filter_categorie" id="filter_categorie">
+                <option value="">choisir une categprie............</option>
                 @foreach ($categories as $cat)
-                <option value="{{$cat->id}}">{{$cat->designation}}</option>
+                    <option value="{{ $cat->id }}">{{ $cat->designation }}</option>
                 @endforeach
             </select>
-           
+
         </div>
         <div>
             <label for="prix_u">Prix : </label>
-            <input type="hidden" name="prix_u_min" id="prix_u_min">
-            <input type="hidden" name="prix_u_max" id="prix_u_max">
+            <input type="hidden" name="prix_u_min" id="prix_u_min" value="0">
+            <input type="hidden" name="prix_u_max" id="prix_u_max" value="1000">
             <!--   ----------------------   -->
             <span id="lower-price">0</span>MAD
             <div id="price-range-slider">
@@ -32,17 +33,26 @@
 
         <div>
             <label for="filter_quantite_stock">Quantite en stock : </label>
-            <input type="text" id="filter_quantite_stock" name="filter_quantite_stock" placeholder="Filtre par Quantite en stock"
-                value="{{ isset($param) ? $param : '' }}">
+            <input type="text" id="filter_quantite_stock" name="filter_quantite_stock"
+                placeholder="Filtre par Quantite en stock" value="{{ isset($param) ? $param : '' }}">
         </div>
-        
 
-        <input type="submit" value="Appliquer" name="search" >
+
+        <input type="submit" value="Appliquer" name="search">
     </form>
+    <div>
+        <a href="{{ route('produits.create') }}">Ajouter un noveau produit</a>
+    </div>
+    <div>
+        <a href="{{ route('produits.clear') }}">Supprimer tous les produits</a>
+    </div>
+    <div>
+        @if ($notFound)
+            <h3>{{ $notFound }} <a href="{{ route('produits.index') }}">retournez a la liste principale</a></h3>
+        @endif
+    </div>
     <table id="tbl">
-        <div>
-            <a href="{{ route('produits.create') }}">Ajouter un noveau produit</a>
-        </div>
+
         <tr>
             <th>ID</th>
             <th>Designation</th>
@@ -57,7 +67,7 @@
                 <td>{{ $produit->designation }}</td>
                 <td>{{ $produit->prix_u }}</td>
                 <td>{{ $produit->quantite_stock }}</td>
-                <td>{{ $produit->categorie_id }} - {{$produit->Categorie->designation}}</td>
+                <td>{{ $produit->categorie_id }} - {{ $produit->Categorie->designation }}</td>
                 <td><a href="{{ route('produits.show', ['produit' => $produit->id]) }}">Details</a></td>
                 <td><a href="{{ route('produits.edit', ['produit' => $produit->id]) }}">Modifier</a></td>
                 <td>

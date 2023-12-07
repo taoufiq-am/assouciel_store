@@ -17,9 +17,6 @@ class DatabaseSeeder extends Seeder
             CategorieSeeder:: class,
             ProduitSeeder::class,
             EtatSeeder::class,
-            ClientSeeder::class,
-            CommandeSeeder::class,
-            LigneCommandeSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();
