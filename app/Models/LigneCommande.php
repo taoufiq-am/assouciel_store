@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class LigneCommande extends Model
 {
     use HasFactory;
-    protected $tableName = "ligneCommandes";
+    protected $table = 'ligneCommandes';
 
     protected $fillable = [
-        "qte","id_prouduit","id_commande"
+        "qte","produit_id","commande_id"
     ];
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\CategorieController;
 
 /*
@@ -23,10 +24,6 @@ Route::get('/show',[HomeController::class,'show'])->name('home.show');
 Route::get('/destroy/{id}',[HomeController::class,"destroy"])->name('home.destroy'); 
 Route::get('/clear}',[HomeController::class,"clear"])->name('home.clear'); 
 
-// Route::get('/clientInfo}',[HomeController::class,"clientInfo"])->name('home.clientInfo'); 
-// Route::post('/storeInfo}',[HomeController::class,"storeInfo"])->name('home.storeInfo'); 
-
-
 
 Route::get("categorie/search",[CategorieController::class,'search'])->name("categories.search");
 Route::get("categorie/clear",[CategorieController::class,'clear'])->name("categories.clear");
@@ -38,3 +35,4 @@ Route::get("produit/clear",[ProduitController::class,'clear'])->name("produits.c
 Route::resource("categories",CategorieController::class);
 Route::resource("produits",ProduitController::class);
 Route::resource("clients",ClientController::class);
+Route::resource("commandes",CommandeController::class);

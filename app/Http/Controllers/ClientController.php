@@ -41,8 +41,9 @@ class ClientController extends Controller
             ]
         );
         $client = Client::create($validateData);
-        // $commande = new CommandeController();
-        // $commande->store($client->id);
+        
+        $commandeController = new CommandeController();
+        return $commandeController->store($client->id);
     
     }
 

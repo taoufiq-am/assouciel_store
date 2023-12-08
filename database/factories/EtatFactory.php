@@ -16,8 +16,9 @@ class EtatFactory extends Factory
      */
     public function definition(): array
     {
+        $etats = ['En attente de confirmation', 'Confirmée', 'Envoyée', 'Payée', 'Retournée'];
         return [
-            "intitule" => "En attente de confirmation",
+            "intitule" =>$this->faker->unique()->randomElement($etats),
             "description" => $this->faker->sentence
             //
         ];

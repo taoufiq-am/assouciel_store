@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\LigneCommande;
 
 class LigneCommandeController extends Controller
 {
@@ -25,9 +26,21 @@ class LigneCommandeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($commande_id)
     {
-        //
+        foreach (session()->get("produits") as $cmdLigne) {
+            // dd([
+            //     "qte"=> $cmdLigne["quantite"],
+            //     "produit_id"=> $cmdLigne["id"],
+            //     "commande_id"=> $commande_id
+            // ]);
+            LigneCommande::create([
+                "qte"=> $cmdLigne["quantite"],
+                "produit_id"=> $cmdLigne["id"],
+                "commande_id"=> $commande_id    
+            ]);
+
+        }
     }
 
     /**

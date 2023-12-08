@@ -28,13 +28,14 @@ class CommandeController extends Controller
      */
     public function store($clientId)
     {
-        Commande::create(
+        $commande=Commande::create(
             [
                 "client_id" => $clientId,
-                "etet_id"=>"En attente de confirmation"
-            ]
-            
-            );
+                "etat_id"=>1
+            ]);
+        $LigneCommandeController=new LigneCommandeController();
+        return $LigneCommandeController->store($commande->id);
+
     }
 
     /**
