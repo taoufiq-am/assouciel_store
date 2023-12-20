@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\CommandeController;
 
 class ClientController extends Controller
@@ -20,10 +22,13 @@ class ClientController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view("clients.create");
-        
+        if ($request->session()->has("client_id")) {
+            return view("commandes.confirm");
+        } else {
+            return view("clients.create");
+        }
     }
 
     /**
@@ -31,7 +36,8 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $validateData=$request->validate(
+
+        $validateData = $request->validate(
             [
                 "nom" => "required",
                 "prenom" => "required",
@@ -40,19 +46,28 @@ class ClientController extends Controller
                 "adresse" => "required"
             ]
         );
+
         $client = Client::create($validateData);
-        
-        $commandeController = new CommandeController();
-        return $commandeController->store($client->id);
-    
+        $request->session()->put("client_id", $client->id);
+        //return redirect()->route("commandes.store");
+        return view("commandes.confirm");
     }
 
+    public function confirm(){
+        return view("clients.confirm");
+    }
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        //
+        if(session("client_id")){
+            $id=session("client_id");
+            $client = Client::find($id);
+            return view("clients.show", compact("client"));
+        }else{
+            return view("clients.create");
+        }
     }
 
     /**
@@ -60,7 +75,8 @@ class ClientController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $client=Client::find($id);
+        return view("clients.edit", compact("client"));
     }
 
     /**
@@ -69,6 +85,21 @@ class ClientController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $validateData = $request->validate(
+            [
+                "nom" => "required",
+                "prenom" => "required",
+                "ville" => "required",
+                "tele" => "required",
+                "adresse" => "required"
+            ]
+        );
+
+        $client = Client::find(session()->get("client_id"));
+        $client->update($validateData);
+        $request->session()->put("client_id", $client->id);
+        //return redirect()->route("commandes.store");
+        return redirect()->route("clients.show",["client"=>$client]);
     }
 
     /**

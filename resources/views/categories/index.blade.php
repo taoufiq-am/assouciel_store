@@ -24,7 +24,7 @@
          <h3>{{ $notFound }} <a href="{{ route('categories.index') }}">retournez a la liste principale</a></h3>
      @endif
 
-     <table id="tbl">
+     <table id="tbl" class="table center  align-middle text-center caption-top">
          <tr>
              <th>Id</th>
              <th>Designation</th>

@@ -51,7 +51,7 @@
             <h3>{{ $notFound }} <a href="{{ route('produits.index') }}">retournez a la liste principale</a></h3>
         @endif
     </div>
-    <table id="tbl">
+    <table id="tbl" class="table center  align-middle text-center caption-top">
 
         <tr>
             <th>ID</th>

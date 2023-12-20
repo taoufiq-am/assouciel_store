@@ -15,7 +15,7 @@ class ProduitController extends Controller
     public function index(Request $request)
     {
         $produitsBuilder = Produit::query();
-        $notFound=false;
+        $notFound = false;
 
         $designation = $request->query("filter_designation");
         $categorie = $request->query("filter_categorie");
@@ -51,7 +51,7 @@ class ProduitController extends Controller
 
         if ($produitsBuilder->count() == 0 && Produit::all()->count() != 0) {
             $notFound = "Aucun produit trouve";
-        }elseif($produitsBuilder->count() < Produit::all()->count()) {
+        } elseif ($produitsBuilder->count() < Produit::all()->count()) {
             $notFound = " ";
         }
 
@@ -103,8 +103,7 @@ class ProduitController extends Controller
      */
     public function show(string $id)
     {
-        $produit = Produit::find($id);
-
+        $produit = Produit::find($id); #
         return view('produits.show')->with("produit", $produit);
 
         //
@@ -127,8 +126,18 @@ class ProduitController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $produitsOnStock=session()->get("produits_on_stock",[]);
+        
+        foreach($produitsOnStock as $key => $value){
+            if ($value["id"] == $id && $value["quantite"] > $request->quantite_stock && $request->quantite_stock!=0) {
+                $produitsOnStock[$key]["quantite"] = $request->quantite_stock;
+                session()->put("produits_on_stock", $produitsOnStock);   
+                break;
+            }
+        }
+
         $validateData = $request->validate([
-            "designation" => "required|unique:produits,designation,".$id,
+            "designation" => "required|unique:produits,designation," . $id,
             "prix_u" => "required",
             "quantite_stock" => "required",
             "categorie_id" => "required",

@@ -7,37 +7,52 @@ use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Controllers\CommandeController;
+use App\Models\Categorie;
 
 class HomeController extends Controller
 {
     //
     public function index()
     {
-        $produits = Produit::all();
-        return view("home.index", compact("produits"));
+        $probiluider = Produit::query();
+        $produits = $probiluider->paginate(32);
+        $categories = Categorie::all();
+        $params = [
+            "filter_designation" => "",
+            "filter_categorie" => "",
+            "prix_u_min" => 0,
+            "prix_u_max" => 1000,
+        ];
+
+        //session()->forget(["produits_out_stock", "produits_on_stock"]);
+
+
+        return view('home.index', compact('produits', "categories", "params"));
     }
 
     /* add prouduct to cart  */
     public function add(Request $request)
     {
-        $sessionProduits = session()->get("produits", []);
+        $produitsOnStock = session()->get("produits_on_stock", []);
         $productExists = false;
-        foreach ($sessionProduits as $key => $product) {
-            if ($product["id"] == $request->id) {
+        foreach ($produitsOnStock as $key => $value) {
+            if ($value["id"] == $request->id) {
+                $stock=Produit::find($value["id"])->quantite_stock;
                 if ($request->recalcule) {
-                    $sessionProduits[$key]["quantite"] = $request->quantite;
-                } else {
-                    $sessionProduits[$key]["quantite"] += $request->quantite;
+                    $produitsOnStock[$key]["quantite"] = $request->quantite;
+                } elseif($produitsOnStock[$key]["quantite"] + $request->quantite < $stock) {
+                    $produitsOnStock[$key]["quantite"] += $request->quantite;
                 }
                 $productExists = true;
                 break;
             }
         }
         if (!$productExists) {
-            $produits = Produit::find($request->id);
-            $sessionProduits[] = ["id" => $produits->id, "quantite" => $request->quantite];
+            $produitsOnStock[] = ["id" => $request->id, "quantite" => $request->quantite];
         }
-        session()->put("produits", $sessionProduits);
+
+        session()->put("produits_on_stock", $produitsOnStock);
+
         if ($request->recalcule) {
             return redirect()->route("home.show");
         } else {
@@ -48,39 +63,115 @@ class HomeController extends Controller
     // show cart 
     public function show()
     {
-        $sessionProduits = session()->get("produits", []);
-        $cartItems = [];
+
+        $produits = array_merge(session()->get("produits_on_stock", []), session()->get("produits_out_stock", []));
+
+        $onStockItems = [];
+        $outStockItems = [];
+        $produits_on_stock = [];
+        $produits_out_stock = [];
         $sum = 0;
-        foreach ($sessionProduits as $produit) {
-            $item = [
-                "produit" => Produit::find($produit["id"]),
-                "quantite" => $produit["quantite"]
+        foreach ($produits as $key => $value) {
+            $produit = Produit::find($value["id"]);
+            $itemToShow = [
+                "produit" => $produit,
+                "quantite" => $value["quantite"]
             ];
-            $sum += $item["quantite"] * $item["produit"]->prix_u;
-            $cartItems[] = $item;
-        }
-        return view("home.show", compact("cartItems", "sum"));
-    }
-// remove a product from cart
-    public function destroy($id)
-    {
-        $sessionProduits = session()->get("produits");
-        foreach ($sessionProduits as $key => $value) {
-            if ($value["id"] == $id) {
-                unset($sessionProduits[$key]);
+            $itemToStore = [
+                "id" => $value["id"],
+                "quantite" => $value["quantite"]
+            ];
+            if ($produit->quantite_stock == 0) {
+                $outStockItems[] = $itemToShow;
+                $produits_out_stock[] = $itemToStore;
+            } else {
+                $sum += $itemToShow["quantite"] * $itemToShow["produit"]->prix_u;
+                $onStockItems[] = $itemToShow;
+                $produits_on_stock[] = $itemToStore;
             }
         }
-        session()->put("produits", $sessionProduits);
+        session()->put("produits_out_stock", $produits_out_stock);
+        session()->put("produits_on_stock", $produits_on_stock);
+
+        return view("home.show", compact("onStockItems", "sum", "outStockItems"));
+    }
+    // remove a product from cart
+    public function destroy(Request $request,$id)
+    {
+        $onStock=true;
+        if($request->onStock){
+            $produits = session()->get("produits_on_stock");
+        }else{
+            $produits = session()->get("produits_out_stock");
+            $onStock=false;
+
+        }
+        foreach ($produits as $key => $value) {
+            if ($value["id"] == $id) {
+                unset($produits[$key]);
+            }
+        }
+        $onStock?session()->put("produits_on_stock", $produits):session()->put("produits_out_stock", $produits);
         return redirect()->back();
     }
-// remove all cart products
+    // remove all cart products
 
     public function clear()
     {
-        session()->forget("produits");
+        session()->forget("produits_on_stock");
+        session()->forget("produits_out_stock");
 
         return redirect()->route('home.index');
     }
+    //search 
+    public function search(Request $request)
+    {
+        $produitsBuilder = Produit::query();
+        $notFound = "";
 
-   
+        $designation = $request->query("filter_designation");
+        $categorie = $request->query("filter_categorie");
+        $prix_u_min = $request->query("prix_u_min");
+        $prix_u_max = $request->query("prix_u_max");
+        $orderPrix = $request->query("orderPrix");
+
+
+        if ($designation != null) {
+            $produitsBuilder->where('designation', 'like', '%' . $designation . '%');
+        }
+        if ($categorie != null) {
+            $produitsBuilder->where('categorie_id', $categorie);
+        }
+        if ($prix_u_min != null) {
+            $produitsBuilder->where('prix_u', '>=', $prix_u_min);
+        }
+
+        if ($prix_u_max != null) {
+            $produitsBuilder->where('prix_u', '<=', $prix_u_max);
+        }
+
+        if ($orderPrix != null) {
+            $produitsBuilder->orderBy('prix_u', $orderPrix);
+        }
+        $params = [
+            "filter_designation" => $designation,
+            "filter_categorie" => $categorie,
+            "prix_u_min" => $prix_u_min,
+            "prix_u_max" => $prix_u_max,
+        ];
+
+        if ($produitsBuilder->count() == 0 && Produit::all()->count() != 0) {
+            $notFound = "Aucun produit trouve";
+        }
+
+        $produits = $produitsBuilder->paginate(30)->appends($params);
+
+        $categories = Categorie::all();
+        return view("home.index", [
+            'produits' => $produits,
+            "categories" => $categories,
+            "notFound" => $notFound,
+            "params" => $params
+        ]);
+    }
 }

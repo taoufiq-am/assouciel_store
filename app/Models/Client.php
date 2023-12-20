@@ -13,4 +13,8 @@ class Client extends Model
     protected $fillable = [
         "nom","prenom","tele","ville","adresse"
     ];
+
+    public function commandes(){
+        return $this->hasMany(Commande::class);
+    }
 }
