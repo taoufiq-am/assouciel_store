@@ -12,13 +12,18 @@ variables:
   DB_PASSWORD: ""
 
 before_script:
+  - sudo apt-get install php8.2-xml
+  - sudo apt-get install php8.2-curl
+  - sudo apt-get install php8.2-dom
   - cp .env.example .env
   - apt-get update -qy
   - apt-get install -y unzip php  # Install unzip and PHP
   - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   - composer install --no-ansi --no-interaction --no-progress --optimize-autoloader
+script:
   - php artisan key:generate
   - php artisan migrate --force
+  - php artisan test
 
 test:
   stage: test
