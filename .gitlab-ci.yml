@@ -3,17 +3,26 @@ stages:
   - deploy
 
 variables:
-  MY_VARIABLE: "Hello, GitLab CI!"
+  APP_ENV: "production"
+  APP_KEY: "base64:+c2Y1DdGUZum0HZ8j9E81AxchR2th43inHvohwxofng="
+  DB_CONNECTION: "mysql"
+  DB_HOST: "localhost"
+  DB_DATABASE: "tp1_elequent"
+  DB_USERNAME: "root"
+  DB_PASSWORD: ""
 
 before_script:
-  - echo "This is a before_script step..."
+  - cp .env.example .env
+  - composer install --no-ansi --no-interaction --no-progress --optimize-autoloader
+  - php artisan key:generate
+  - php artisan migrate --force
 
 test:
   stage: test
   script:
-    - echo "Running tests..."
+    - vendor/bin/phpunit
 
 deploy:
   stage: deploy
   script:
-    - echo "Deploying the application..."
+    - echo "deploy"
