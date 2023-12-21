@@ -1,5 +1,4 @@
 stages:
-  - build
   - test
   - deploy
 
@@ -8,11 +7,6 @@ variables:
 
 before_script:
   - echo "This is a before_script step..."
-
-build:
-  stage: build
-  script:
-    - echo "Building the project..."
 
 test:
   stage: test
