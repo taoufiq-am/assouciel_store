@@ -1,0 +1,11 @@
+db.conducteur.aggregate(
+  {$match:
+      {$or:[{"salaire":{$gt:3500}},{"ville":/^casablanca$/i}]}}
+      ,
+      {$lookup:{
+        from:"service",
+        localField:"id_service",
+        foreignField:"_id",
+        as:"serviceDetailes"}},
+        
+      {$project:{"_id":1,"nom_service":"$serviceDetailes.nom_service","ville":1,"salaire":1}})
