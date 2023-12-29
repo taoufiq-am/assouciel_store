@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Etat;
 use App\Models\Client;
 use App\Models\Produit;
+use App\Models\Commande;
+use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Controllers\CommandeController;
-use App\Models\Categorie;
 
 class HomeController extends Controller
 {
@@ -173,5 +175,22 @@ class HomeController extends Controller
             "notFound" => $notFound,
             "params" => $params
         ]);
+    }
+    // show the client commandes
+    public function myOrders(Request $request)
+    {
+        $commandesBuilder = Commande::query();
+        $notFound = "";
+        if ($request->etat) {
+            $commandesBuilder->where("etat_id", $request->etat);
+        }
+        $clientId = session()->get('client_id');
+        $commandes = $commandesBuilder->where("client_id", $clientId)->get();
+
+        if ($commandes->count() == 0) {
+            $notFound = "not found";
+        }
+        $etats = Etat::all();
+        return view("home.my_orders", compact("commandes", "etats", "notFound"));
     }
 }
