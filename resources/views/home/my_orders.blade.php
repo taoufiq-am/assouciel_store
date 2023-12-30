@@ -1,7 +1,7 @@
-@extends('layouts.admin')
+@extends('layouts.user')
 @section('title', 'Home')
 @section('content')
-    <form action="{{ route('commandes.myOrders') }}">
+    <form action="{{ route('home.myOrders') }}">
         <label for="etat">Etat</label>
         <select name="etat" id="etat">
             @foreach ($etats as $etat)
@@ -12,7 +12,7 @@
     </form>
     @if ($notFound)
     <h1>{{$notFound}}</h1>
-    <a href="{{route("commandes.myOrders")}}">go back to all commandes</a>
+    <a href="{{route("home.myOrders")}}">go back to all commandes</a>
     @endif
     <table class="table center  align-middle text-center caption-top">
         <thead>

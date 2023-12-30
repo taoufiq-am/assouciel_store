@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.user')
 @section('title', 'Home')
 @section('content')
     <form action="{{ route('home.search') }}" method="get">

@@ -71,6 +71,7 @@ class CommandeController extends Controller
                 "etat_id" => 1
             ]
         );
+
         $request->session()->put("commande_id", $commande->id);
         return view("ligneCommandes.store");
     }

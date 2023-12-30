@@ -11,26 +11,18 @@
     <!-- Include the noUiSlider stylesheet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.css">
 
-
     <title>@yield('title', 'App store')</title>
 </head>
 
 <body>
     <nav>
         <ul>
-            {{-- <li><a href="{{ route('home.index')}}">Accueil</a></li> --}}
-            <li><a href="{{ route('categories.index') }}">Gestion des categories</a></li>
-            <li><a href="{{ route('produits.index') }}">Gestion des produits</a></li>
-            <li><a href="{{route("commandes.index")}}">Gestion des commande</a></li>
-            <li><a href="{{route("register")}}">Ajouter un admin </a></li>
-            <li>
-                <form action="{{route("logout")}}" method="POST">
-                @csrf
-                <input type="submit" value="Log out">
-                </form>
-            </li>
-            {{-- <li><a href="{{route('home.show') }}">View cart</a></li> --}}
-            {{-- <li><a href="{{route("home.myOrders")}}">mes commande</a></li> --}}
+            <li><a href="{{ route('home.index')}}">Accueil</a></li>
+            {{-- <li><a href="{{ route('categories.index') }}">Gestion des categories</a></li> --}}
+            {{-- <li><a href="{{ route('produits.index') }}">Gestion des produits</a></li> --}}
+            {{-- <li><a href="{{route("commandes.index")}}">Gestion des commande</a></li> --}}
+            <li><a href="{{route('home.show') }}">View cart</a></li>
+            <li><a href="{{route("home.myOrders")}}">mes commande</a></li>
         </ul>
     </nav>
     <div class="main">

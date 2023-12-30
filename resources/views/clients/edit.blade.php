@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.user')
 @section('title', 'Info')
 @section('content')
     <h2>Add Client</h2>
