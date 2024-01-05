@@ -59,3 +59,6 @@ function showImage(input) {
         productImg.src = "";
     }
 }
+
+//modify the commande status
+

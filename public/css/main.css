@@ -76,3 +76,26 @@ footer {
     padding: 20px;
     text-align: center;
 }
+.Retournée{
+    background-color: blue !important;
+}
+.Payée{
+    background-color: green !important;
+
+}
+.Envoyée{
+    background-color:yellow !important;
+
+}
+.Anuller{
+    background-color: lightblue !important;
+
+}
+.Confirmée{
+    background-color: orange !important;
+
+}
+.En, .attente, .de ,.confirmation{
+    background-color: red !important;
+
+}

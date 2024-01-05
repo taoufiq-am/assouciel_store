@@ -13,8 +13,34 @@ class EtatSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        Etat::factory(5)->create();
+        
+        $data=[
+            [
+                'intitule'=>'En attente de confirmation',
+                'description'=>'en attente de confirmation'
+            ],
+            [
+                'intitule'=>'Confirmée',
+                'description'=>'confirmée'
+            ],
+            [
+                'intitule'=>'Anuller',
+                'description'=>'Anuller'
+            ],
+            [
+                'intitule'=>'Envoyée',
+                'description'=>'envoyée'
+            ],
+            [
+                'intitule'=>'Payée',
+                'description'=>'payée'
+            ],
+            [
+                'intitule'=>'Retournée',
+                'description'=>'retournée'
+            ],
 
+        ];
+        Etat::insert($data);
     }
 }

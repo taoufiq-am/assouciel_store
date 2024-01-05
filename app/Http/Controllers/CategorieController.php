@@ -19,6 +19,7 @@ class CategorieController extends Controller
         $params = [
             "designation" => "",
             "description" => "",
+        
         ];
 
         return view("categories.index", compact('categories','params'));

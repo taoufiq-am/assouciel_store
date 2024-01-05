@@ -47,8 +47,8 @@ class CommandeController extends Controller
         ];
         $commandesToExport = $commandesBuilder->get();
         $commandes = $commandesBuilder->paginate(10)->appends($param);
-        $request->session()->put("commandesToExport",$commandesToExport);
-        return view('commandes.index', compact('commandes', "notFound", "etats","commandesToExport"));
+        $request->session()->put("commandesToExport", $commandesToExport);
+        return view('commandes.index', compact('commandes', "notFound", "etats", "commandesToExport"));
     }
 
     /**
@@ -68,7 +68,7 @@ class CommandeController extends Controller
         $commande = Commande::create(
             [
                 "client_id" => $clientId,
-                "etat_id" => 1
+                "etat_id" => 1 // to solve don't use id but use default
             ]
         );
 
@@ -97,30 +97,36 @@ class CommandeController extends Controller
     public function edit(string $id)
     {
         $commande = Commande::find($id);
-        $etats = Etat::all();
-        $deliveredDate = Carbon::parse($commande->created_at)->addDays(7);
+        $etats_possible = [];
 
+        $etats = Etat::where("id", ">", $commande->etat->id)->get();
+        $deliveredDate = Carbon::parse($commande->created_at)->addDays(7);
+      
         return view("commandes.edit", compact("commande", "etats", "deliveredDate"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update($idEtat,$idCommande)
     {
-        $commande = Commande::find($id);
-        $commande->etat_id = $request->newEtat;
+        $commande = Commande::find($idCommande);
+        $commande->etat_id = $idEtat;
         $commande->save();
-        if($request->newEtat == 3 || $request->newEtat == 6){
-            $produits=$commande->produits;
-            foreach($produits as $produit){
+
+        $newEtatIntitule=$commande->etat->intitule;
+
+        //reduce the product stock
+        if ($idEtat == 3 || $idEtat == 6) {
+            $produits = $commande->produits;
+            foreach ($produits as $produit) {
                 $produit->quantite_stock += $produit->pivot->qte;
                 $produit->save();
-
             }
-
         }
-        return redirect()->route("commandes.index");
+
+        // return redirect()->route("commandes.index");
+        return response()->json(['newEtatIntitule' =>$newEtatIntitule ]);
     }
 
     /**
@@ -133,13 +139,19 @@ class CommandeController extends Controller
         return back();
     }
 
-    
+    public function getEtats()
+    {
+        $etats = Etat::all();
+
+        return response()->json(['etats' => $etats]);
+    }
+
 
     public function exportCSV(Request $request)
     {
-        
+
         $commandes = $request->session()->get("commandesToExport");
-        
+
         $csvFileName = 'commandes.csv';
         $headers = [
             'Content-Type' => 'text/csv',
