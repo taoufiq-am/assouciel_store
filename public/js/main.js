@@ -62,3 +62,4 @@ function showImage(input) {
 
 //modify the commande status
 
+

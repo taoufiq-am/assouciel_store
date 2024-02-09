@@ -1,0 +1,154 @@
+.categorie form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.categorie label {
+    font-size: 1.25em;
+     color: black;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.categorie input,textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.categorie .button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.categorie .button:hover {
+    background-color: #0056b3;
+}
+
+
+.produit form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.produit label {
+    font-size: 1.25em;
+     color: black;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.produit input,textarea,select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.produit .button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.produit .button:hover {
+    background-color: #0056b3;
+}
+
+.commmande form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.commmande label {
+    font-size: 1.25em;
+     color: black;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.commmande input,textarea,select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.commmande .button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.commmande .button:hover {
+    background-color: #0056b3;
+}
+
+p{
+    font-size: 1.25em;
+}
+
+.img-pro {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+}
+/* .Retournée{
+    background-color: blue !important;
+}
+.Payée{
+    background-color: green !important;
+
+}
+.Envoyée{
+    background-color:yellow !important;
+
+}
+.Anuller{
+    background-color: lightblue !important;
+
+}
+.Confirmée{
+    background-color: orange !important;
+
+}
+.En, .attente, .de ,.confirmation{
+    background-color: red !important;
+
+} */

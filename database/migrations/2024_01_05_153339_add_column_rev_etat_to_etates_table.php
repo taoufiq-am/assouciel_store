@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('etats', function (Blueprint $table) {
 
-            $table
+            $table->integer("prevEtat")->nullable();
         });
     }
 
@@ -23,6 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('etats', function (Blueprint $table) {
+            $table->dropColumn('prevEtat');
+
             //
         });
     }

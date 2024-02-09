@@ -13,10 +13,14 @@ class Etat extends Model
     protected $tableName = "etats";
 
     protected $fillable = [
-        "intitule","description"
+        "intitule","description","prevEtat"
     ];
 
     public function commandes(){
         return $this->hasMany(Commande::class);
+    }
+
+    public function next(){
+        return $this->hasMany(Etat::class, 'prevEtat', 'id');
     }
 }

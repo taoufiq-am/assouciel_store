@@ -17,27 +17,35 @@ class EtatSeeder extends Seeder
         $data=[
             [
                 'intitule'=>'En attente de confirmation',
-                'description'=>'en attente de confirmation'
+                'description'=>'en attente de confirmation',
+                "prvEtat"=>null
             ],
             [
                 'intitule'=>'Confirmée',
-                'description'=>'confirmée'
+                'description'=>'confirmée',
+                "prvEtat"=> 1
+
             ],
             [
                 'intitule'=>'Anuller',
-                'description'=>'Anuller'
+                'description'=>'Anuller',
+                "prvEtat"=>1
+
             ],
             [
                 'intitule'=>'Envoyée',
-                'description'=>'envoyée'
+                'description'=>'envoyée',
+                "prvEtat"=>2
             ],
             [
                 'intitule'=>'Payée',
-                'description'=>'payée'
+                'description'=>'payée',
+                "prvEtat"=>4
             ],
             [
                 'intitule'=>'Retournée',
-                'description'=>'retournée'
+                'description'=>'retournée',
+                "prvEtat"=>4
             ],
 
         ];

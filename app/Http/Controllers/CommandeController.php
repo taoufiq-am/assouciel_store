@@ -15,6 +15,10 @@ class CommandeController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function __construct()
+    // {
+    //     $this->middleware('auth')->only('index');
+    // }
     public function index(Request $request)
     {
 
@@ -101,15 +105,18 @@ class CommandeController extends Controller
 
         $etats = Etat::where("id", ">", $commande->etat->id)->get();
         $deliveredDate = Carbon::parse($commande->created_at)->addDays(7);
-      
+
         return view("commandes.edit", compact("commande", "etats", "deliveredDate"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($idEtat,$idCommande)
+    public function update(Request $request,$idCommande)
     {
+        // dd($request->all());
+        // dd($idCommande);
+        $idEtat=$request->newEtatId;
         $commande = Commande::find($idCommande);
         $commande->etat_id = $idEtat;
         $commande->save();
@@ -117,7 +124,7 @@ class CommandeController extends Controller
         $newEtatIntitule=$commande->etat->intitule;
 
         //reduce the product stock
-        if ($idEtat == 3 || $idEtat == 6) {
+        if ($newEtatIntitule == "Retournée" || $newEtatIntitule == "Anuller") {
             $produits = $commande->produits;
             foreach ($produits as $produit) {
                 $produit->quantite_stock += $produit->pivot->qte;
@@ -125,8 +132,8 @@ class CommandeController extends Controller
             }
         }
 
-        // return redirect()->route("commandes.index");
-        return response()->json(['newEtatIntitule' =>$newEtatIntitule ]);
+        return response()->json(['newEtatIntitule' => $newEtatIntitule]);
+
     }
 
     /**
@@ -139,12 +146,14 @@ class CommandeController extends Controller
         return back();
     }
 
-    public function getEtats()
+    public function getEtats($id)
     {
-        $etats = Etat::all();
+            $etats = Etat::with('next')->findOrFail($id);
 
-        return response()->json(['etats' => $etats]);
+            return response()->json(['etats' => $etats->next]);
     }
+
+
 
 
     public function exportCSV(Request $request)

@@ -2,12 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\RolePermissionController;
+use Spatie\Permission\Middlewares\RoleMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,31 +36,43 @@ Route::middleware("guest")->group(function () {
 
     Route::resource("clients", ClientController::class);
     Route::resource("ligneCommandes", LigneCommandeController::class);
+    Route::resource("commandes", CommandeController::class)->except('update','show');
+
 });
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::group(['middleware' => ['role:Admin']], function () {
+        Route::resource('roles', RoleController::class);
+        Route::get('roles/{role}/assign-permissions', [RolePermissionController::class, 'index'])->name('roles.show');
+        Route::post('roles/{role}/assign-permissions', [RolePermissionController::class, 'assign'])->name('roles.assign-permissions');
 
+        Route::resource('permissions', PermissionController::class);
+        Route::get('/assign-role', [UserRoleController::class, 'index'])->name('user_roles.index');
+        Route::get('{user}/assign-role', [UserRoleController::class, 'create'])->name('user_roles.create');
+        Route::post('/{user}/assign-role', [UserRoleController::class, 'assignRoles'])->name('user_roles.store');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get("categorie/search", [CategorieController::class, 'search'])->name("categories.search");
-    Route::get("categorie/clear", [CategorieController::class, 'clear'])->name("categories.clear");
+    });
+    Route::group(['middleware' => ['role:commercial']], function () {
+        Route::get('/commandes', [CommandeController::class, "index"])->name('commandes.index');
+        Route::get('/commandes/{id}', [CommandeController::class, "show"])->name('commandes.show');
+        Route::get('/get-etats/{id}', [CommandeController::class, "getEtats"])->name('get-etats');
+        Route::put('/commandes-update/{id}', [CommandeController::class, "update"]);
+        Route::post('/commandes/exportCSV', [CommandeController::class, "exportCSV"])->name("commandes.exportCSV");
+    });
+    Route::group(['middleware' => ['role:magasinier']], function () {
+        Route::resource("categories", CategorieController::class);
+        Route::resource("produits", ProduitController::class);
+        Route::get("categorie/search", [CategorieController::class, 'search'])->name("categories.search");
+        Route::get("categorie/clear", [CategorieController::class, 'clear'])->name("categories.clear");
 
-    Route::get("produit/search", [ProduitController::class, 'search'])->name("produits.search");
-    Route::get("produit/clear", [ProduitController::class, 'clear'])->name("produits.clear");
+        Route::get("produit/search", [ProduitController::class, 'search'])->name("produits.search");
+        Route::get("produit/clear", [ProduitController::class, 'clear'])->name("produits.clear");
+    });
 
-    Route::get('/get-etats', [CommandeController::class, "getEtats"])->name('get-etats');
-    Route::post('/commandes/exportCSV', [CommandeController::class, "exportCSV"])->name("commandes.exportCSV");
-
-
-
-    Route::resource("categories", CategorieController::class);
-    Route::resource("produits", ProduitController::class);
-
-    Route::Post("commandes/{idEtat}/{idCommand}", [CommandeController::class, "update"])->name("commandes.update");
-    Route::resource("commandes", CommandeController::class);
 });
 
 require __DIR__ . '/auth.php';

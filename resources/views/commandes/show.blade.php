@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.layout')
 @section('title', 'Home')
-@section('content')
+@section('space-work')
 
     <h3>Detaile du commande</h3>
 
@@ -54,8 +54,8 @@
                 <th scope="col">Image</th>
                 <th scope="col">designation</th>
                 <th scope="col">Quantite demander</th>
-                <th scope="col">Prix</th>
-                <th scope="col">Prix x Quantite demander</th>
+                <th scope="col">Prix unitaire</th>
+                <th scope="col">Prix totale</th>
             </tr>
         </thead>
         <tbody>
@@ -77,7 +77,7 @@
                 </tr>
             @endforeach
             <tr>
-                <th colspan="5" class="bg-success">total </th>
+                <th colspan="5" class="bg-secondary">total </th>
                 <td id="sum">{{ $sum }} MAD</td>
             </tr>
 

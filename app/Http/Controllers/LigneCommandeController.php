@@ -38,7 +38,7 @@ class LigneCommandeController extends Controller
             $produit->save();
 
         }
-        
+
         foreach (session()->get("produits_on_stock") as $cmdLigne) {
             LigneCommande::create([
                 "qte" => $cmdLigne["quantite"],

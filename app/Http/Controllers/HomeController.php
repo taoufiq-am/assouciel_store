@@ -17,7 +17,7 @@ class HomeController extends Controller
     public function index()
     {
         $probiluider = Produit::query();
-        $produits = $probiluider->paginate(32);
+        $produits = $probiluider->paginate(10);
         $categories = Categorie::all();
         $params = [
             "filter_designation" => "",
@@ -62,7 +62,7 @@ class HomeController extends Controller
         }
     }
 
-    // show cart 
+    // show cart
     public function show()
     {
 
@@ -125,7 +125,7 @@ class HomeController extends Controller
 
         return redirect()->route('home.index');
     }
-    //search 
+    //search
     public function search(Request $request)
     {
         $produitsBuilder = Produit::query();

@@ -1,7 +1,7 @@
 @extends('layouts.user')
 @section('title', 'show cart')
 @section('content')
-    @if ($onStockItems)
+    {{-- @if ($onStockItems)
         <a href="{{ route('home.clear') }}">Clear carts</a>
         <table class="table center  align-middle text-center caption-top">
             <caption>Cart Products</caption>
@@ -106,8 +106,64 @@
             @endforeach
         </tbody>
         </table>
+    @endif --}}
+<div class="show">
+
+    @if (empty($onStockItems))
+        <p class="mt-5 text-center">Votre panier est vide</p>
+    @else
+        <h1>Mon panier</h1>
+
+        <table class="panier">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Designation</th>
+                    <th>Image</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantite</th>
+                    <th>Total ligne</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($onStockItems as $id => $item)
+                <tr>
+                    <td>{{ $id }}</td>
+                    <td><img width="100" height="100" src="{{ asset('storage/' . $item['produit']->image) }}"
+                        alt="{{ $item['produit']->designation }}"></td>
+                    <td>{{ $item['produit']->designation }}</td>
+                    <td>{{ $item['produit']->prix_u }} MAD</td>
+                    <form action="{{ route('home.add', ['id' => $item['produit']->id]) }}">
+                        <td><input type="number" value="{{ $item['quantite'] }}" min=1 name="quantite"
+                                max="{{ $item['produit']->quantite_stock }}">
+                            <input type="submit" value="recalcule" name="recalcule">
+                        </td>
+                    </form>
+                    <td>{{$item['quantite'] * $item['produit']->prix_u }} MAD</td>
+                    <td>
+                        <form action="{{ route('home.destroy', ['id' => $id]) }}" method="POST">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit" class="btn btn-supprimer"
+                                onclick="return confirm('Voulez-vous supprimer cette ligne?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+                <tr class="total-row">
+                    <th colspan="4">Total</th>
+                    <td id="sum" colspan="2">{{ $sum }} MAD</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="actions">
+            <a href="{{ route('clients.show', ['client' => 0]) }}" class="btn btn-commander">Commander</a>
+            <a href="{{ route('home.clear') }}" class="btn btn-vider">Vider le panier</a>
+        </div>
     @endif
 
-
+</div>
 
 @endsection

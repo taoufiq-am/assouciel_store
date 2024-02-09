@@ -1,82 +1,77 @@
-    @extends('layouts.admin')
+    @extends('layouts.layout')
     @section('title', 'Gestion des categories')
-    @section('content')
+    @section('space-work')
 
         <h1>Liste des commandes</h1>
-        <form action="{{ route('commandes.index') }}">
-            <div>
-                <label for="etat">Etat</label>
-                <select name="etat" id="etat">
-                    <option value="">Select une etat</option>
-                    @foreach ($etats as $etat)
-                        <option value="{{ $etat->id }}">{{ $etat->intitule }}</option>
-                    @endforeach
-                </select>
+        <form class="form-inline" action="{{ route('commandes.index') }}" method="get">
+            <div class="form-group mx-sm-3 mb-2">
+              <label for="etat" class="text-dark mr-2" style="font-size: 1.25em">Etat :</label>
+              <select class="form-control border" style="width: 20em" name="etat" id="etat">
+                <option value="">Selecter une etat...</option>
+                @foreach ($etats as $etat)
+                    <option value="{{ $etat->id }}">{{ $etat->intitule }}</option>
+                @endforeach
+            </select>
             </div>
-            <div>
-                <label for="">Nom client</label>
-                <input type="text" placeholder="nom de client" name="nomClient">
-            </div>
-            <div>
-                <label for="">Date min</label>
-                <input type="date" name="dateMin">
-            </div>
-            <div>
-                <label for="">Date max</label>
-                <input type="date" name="dateMax">
-            </div>
-            <input type="submit" value="Filtrer">
-        </form>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="nomClient" class="text-dark mr-2" style="font-size: 1.25em">Nom client :</label>
+               <input type="text" class="form-control border " id="nomClient" name="nomClient" placeholder="Designation">
+             </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="date" class="text-dark mr-2" style="font-size: 1.25em">Date min :</label>
+               <input type="date" class="form-control border " id="date" name="dateMin">
+             </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="date" class="text-dark mr-2" style="font-size: 1.25em">Date max :</label>
+               <input type="date" class="form-control border " id="date" name="dateMax">
+             </div>
+            <button type="submit" class="btn btn-primary mb-2">Filter</button>
+          </form>
 
-        @if ($notFound)
-            <h1>{{ $notFound }}</h1>
-            <a href="{{ route('commandes.index') }}">go back to all commandes</a>
-        @else
             <form action="{{ route('commandes.exportCSV') }}" method="post">
                 @csrf
-                <input type="submit" value="Export CSV file">
+                <input class="btn btn-primary" type="submit" value="Export CSV file">
             </form>
-        @endif
 
 
-
-        <table class="table center  align-middle text-center caption-top">
-            <thead>
+        {{-- <form action="{{ route('commandes.update', ['commande' => 1]) }}" method="post">
+            @csrf
+            @method('put')
+            <input type="submit" value="AAAAAAAAAAAAAAAAAAAAAA">
+        </form> --}}
+        <table id="tbl" class="table center align-middle text-center caption-top">
                 <tr>
-                    <th class="col ">ID</th>
-                    <th class="col ">etat</th>
-                    <th class="col ">date</th>
-                    <th class="col ">Nom client</th>
-                    <th class="col " colspan="2">Action</th>
+                    <th>ID</th>
+                    <th>Nom client</th>
+                    <th>date</th>
+                    <th>etat</th>
+                    <th colspan="2">Action</th>
                 </tr>
-            </thead>
-            <tbody>
+                @if ($notFound)
+                <tr>
+                    <td colspan="6">La list est vide <a href="{{ route("commandes.index") }}">Retourner a la list</a></td>
+                 </tr>
+                @else
                 @foreach ($commandes as $commande)
                     <tr>
-                        <td class="col  ">{{ $commande->id }}</td>
-                        <td class="{{ $commande->etat->intitule }}">{{ $commande->etat->intitule }}</td>
-                        <td class="col ">{{ $commande->created_at }}</td>
-                        <td class="col ">{{ $commande->client->nom }}</td>
-                        <td class="col ">
-                            <a class="btn btn-promary"
-                                href="{{ route('commandes.show', ['commande' => $commande->id]) }}">detail</a>
+                        <td>{{ $commande->id }}</td>
+                        <td>{{ $commande->client->nom }}</td>
+                        <td>{{ Carbon\Carbon::parse($commande->created_at)->format('Y-m-d') }}</td>
+                        <td class="{{ $commande->etat->intitule }}"><span
+                            class="oldEtatIntitule">{{ $commande->etat->intitule }}</span> <span hidden
+                            class="oldEtatId">{{ $commande->etat->id }}</span>
                         </td>
-
-                        <td class="col  tdAction">
-                            {{-- <form action="{{ route('commandes.update', ['commande' => $commande->id]) }}" method="post"
-                                style="display:none">
-                                @method('put')
-                                @csrf
-                                <input type="hidden" name="newEtat" class="hiddenInput">
-                                <input type="submit" value="Save">
-                            </form> --}}
-                            <button class="save" style="display:none">Save</button>
-                            <button class="btn btn-promary modify-btn">modifier etat</button>
+                        <td>
+                            <a class="btn btn-primary"
+                                href="{{ route('commandes.show', ['id' => $commande->id]) }}">detail</a>
+                        </td>
+                        <td class="tdAction">
+                            <button class="btn btn-secondary save" style="display:none">Save</button>
+                            <button class="btn btn-primary modify-btn">modifier etat</button>
                         </td>
                     </tr>
                 @endforeach
-
-            </tbody>
+                @endif
         </table>
         <div>
             {{ $commandes->links() }}
@@ -86,53 +81,32 @@
         $(document).ready(function() {
             $(".modify-btn").click(function() {
                 let row = $(this).closest('tr');
-                let oldEtatIntitule = row.find('td:eq(1)').text();
-                let options = [];
+                let oldEtatIntitule = row.find('.oldEtatIntitule').text();
+                let oldEtatId = row.find('.oldEtatId').text();
 
-                // Hide the modify button and show the save form
                 $(this).toggle();
                 $(this).prev('.save').toggle();
                 $.ajax({
                     type: 'GET',
-                    url: '{{ route('get-etats') }}',
+                    url: `/get-etats/${oldEtatId}`,
                     success: function(response) {
-                        // Adjust the default value for the hidden input 
-                        let oldEtatId = response.etats.find(obj => obj.intitule ===
-                            oldEtatIntitule).id;
+                           let etats = response.etats;
 
-                        // Prepare the states for the select field
-                        switch (oldEtatIntitule) {
-                            case "En attente de confirmation":
-                                options = ["En attente de confirmation", "Confirmée",
-                                "Anuller"];
-                                break;
-                            case "Confirmée":
-                                options = ["Confirmée", "Envoyée"];
-                                break;
-                            case "Anuller":
-                                options = ["Anuller"];
-                                break;
-                            case "Envoyée":
-                                options = ["Envoyée", "Payée", "Retournée"];
-                                break;
-                            case "Retournée":
-                                options = ["Retournée"];
-                                break;
-                            case "Payée":
-                                options = ["Payée"];
-                                break;
-                        }
-                        // Create the HTML options tags with the states id on the value
-                        let etats = options.map(opt => {
-                            return `<option value="${response.etats.find(obj => obj.intitule === opt).id}">${opt}</option>`;
-                        }).join('');
+                            if (etats.length > 0) {
+                                let options = etats.map(etat => {
+                                return `<option value="${etat.id}">${etat.intitule}</option>`;
+                            }).join('');
 
-                        // Add the options to the select
-                        row.find('td:eq(1)').html(
-                            `<select class="form-control selectEtat" name="newEtat" id="">
-                                ${etats}
+                            row.find('td:eq(3)').html(
+                                `<select class="form-control selectEtat" name="newEtat" id="">
+                                <option value="${oldEtatId}">${oldEtatIntitule}</option>
+                                ${options}
                             </select>`
-                        );
+                            );
+
+                        }
+
+
                     }
                 });
             });
@@ -146,17 +120,26 @@
                 $(this).next('.modify-btn').toggle();
 
 
-
                 $.ajax({
-                    url: `/commandes/${newEtatId}/${commandId}`,
-                    type: 'POST',
+                    url: "/commandes-update/" + commandId,
+                    type: 'PUT',
                     data: {
-                        _token: $('meta[name="csrf-token"]').attr("content"),
+                        _token: '{{ csrf_token() }}',
+                        _method: 'PUT',
+                        newEtatId: newEtatId
                     },
-                    success: function(response) {
-                        row.find('td:eq(1)').text(response.newEtatIntitule).attr({"class":response.newEtatIntitule});
-                    }
 
+                    success: function(response) {
+                        row.find('td:eq(3)').html(
+                            `
+                        <span
+                            class="oldEtatIntitule">${response.newEtatIntitule}</span>
+                             <span hidden
+                            class="oldEtatId">${newEtatId}</span>
+                        `
+                        ).addClass(response.newEtatInt);
+                        console.log(response);
+                    }
                 });
             });
         });
